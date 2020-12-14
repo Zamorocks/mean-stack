@@ -10,8 +10,6 @@ const normalizePort = val => {
     return val;
   }
 
-  // const dbpw = dD5zeVVvvPw73Evm;
-
   if (port >= 0) {
     // port number
     return port;
