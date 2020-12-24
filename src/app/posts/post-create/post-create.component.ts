@@ -1,30 +1,30 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, ParamMap } from '@angular/router';
-import { Post } from '../post-list/post.model';
-import { PostsService } from '../post-list/post.service';
-import { mimeType } from './mime-type.validator';
+import { Component, OnInit } from "@angular/core";
+import { FormGroup, FormControl, Validators } from "@angular/forms";
+import { ActivatedRoute, ParamMap } from "@angular/router";
+
+import { PostsService } from "../posts.service";
+import { Post } from "../post.model";
+import { mimeType } from "./mime-type.validator";
 
 @Component({
-  selector: 'app-post-create',
-  templateUrl: './post-create.component.html',
-  styleUrls: ['./post-create.component.css']
+  selector: "app-post-create",
+  templateUrl: "./post-create.component.html",
+  styleUrls: ["./post-create.component.css"]
 })
 export class PostCreateComponent implements OnInit {
-
-  enteredTitle = '';
-  enteredContent = '';
+  enteredTitle = "";
+  enteredContent = "";
   post: Post;
-  private mode = 'create';
-  private postId: string;
   isLoading = false;
   form: FormGroup;
   imagePreview: string;
+  private mode = "create";
+  private postId: string;
 
   constructor(
     public postsService: PostsService,
     public route: ActivatedRoute
-  ){}
+  ) {}
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -48,7 +48,8 @@ export class PostCreateComponent implements OnInit {
             id: postData._id,
             title: postData.title,
             content: postData.content,
-            imagePath: postData.imagePath
+            imagePath: postData.imagePath,
+            creator: postData.creator
           };
           this.form.setValue({
             title: this.post.title,
@@ -61,6 +62,17 @@ export class PostCreateComponent implements OnInit {
         this.postId = null;
       }
     });
+  }
+
+  onImagePicked(event: Event) {
+    const file = (event.target as HTMLInputElement).files[0];
+    this.form.patchValue({ image: file });
+    this.form.get("image").updateValueAndValidity();
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = reader.result as string;
+    };
+    reader.readAsDataURL(file);
   }
 
   onSavePost() {
@@ -83,16 +95,5 @@ export class PostCreateComponent implements OnInit {
       );
     }
     this.form.reset();
-  }
-
-  onImagePicked(event: Event){
-    const file = (event.target as HTMLInputElement).files[0];
-    this.form.patchValue({image: file});
-    this.form.get('image').updateValueAndValidity();
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.imagePreview = reader.result as string;
-    };
-    reader.readAsDataURL(file);
   }
 }

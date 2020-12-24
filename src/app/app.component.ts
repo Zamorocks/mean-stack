@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+
 import { AuthService } from './auth/auth.service';
-import { Post } from './posts/post-list/post.model';
 
 @Component({
   selector: 'app-root',
@@ -8,21 +8,9 @@ import { Post } from './posts/post-list/post.model';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'mean-course';
-
-  storedPosts: Post[] = [];
-  constructor(private authService: AuthService){}
-
-  // onPostAdded(post) {
-  //   this.storedPosts.push(post);
-  // }
+  constructor(private authService: AuthService) {}
 
   ngOnInit() {
     this.authService.autoAuthUser();
   }
-
-  onPostAdded(post) {
-    this.storedPosts.push(post);
-  }
-
 }
