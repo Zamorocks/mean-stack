@@ -2,6 +2,7 @@
 
 # security variables
 .env
+nodemon.json
 # compiled output
 /dist
 /tmp
